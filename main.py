@@ -5,7 +5,6 @@ PRINCIPAL_POPULATION = 255000000 # Starting population
 STARTING_YEAR = 1 # Starting year of simulation
 ENDING_YEAR = 2025 # Ending year of simulation
 
-# GENERATION_LENGTH = (20, 30) # Length of each generation expressed as (a, b) where a is the minimum generation length and b is the maximum generation length. a and b are both integers.
 AVERAGE_DEATH_RATE = (11, 23) # Death rate expressed as (a, b) where a is the minimum death rate and b is the maximum death rate. a and b are both expressed as deaths/1000 people. a and b are both integers.
 AVERAGE_BIRTH_RATE = (20, 34) # Live birth rate expressed as (a, b) where a is the minimum birth rate and b is the maximum birth rate. a and b are both expressed as births/1000 people. a and b are both integers.
 CHILD_MORTALITY_RATE = (150, 375) # Child mortality rate expressed as (a, b) where a is the minimum mortality rate and b is the maximum mortality rate. a and b are both expressed as deaths/1000 live births. a and b are both integers.
@@ -91,27 +90,27 @@ class PopulationEstimation:
         if self.large_disaster["year"] == self.year:
             large_disaster = True
 
-        # Children birth stuff
+        # Children birth
         births = int(self.population * self.current_birth_rate)
         population_difference += births
         
-        # Children death stuff
+        # Children death
         child_morality = int(births * self.current_child_mortality_rate)
         population_difference -= child_morality
         
-        # Death stuff
+        # Normal death
         deaths = int(self.population * self.current_death_rate)
         population_difference -= deaths
 
-        # Medium disaster stuff
+        # Medium disaster handling
         if medium_disaster:
             medium_disaster_deaths = int(self.population * self.medium_disaster["rate"])
             population_difference -= medium_disaster_deaths
 
             self.medium_disaster = self.medium_disaster_data(adapt=True)
 
-        # Large disaster stuff
-        if large_disaster:
+        # Large disaster handling
+        elif large_disaster:
             large_disaster_deaths = int(self.population * self.large_disaster["rate"])
             population_difference -= large_disaster_deaths
 
@@ -135,10 +134,7 @@ class PopulationEstimation:
         plt.grid(True)
         plt.show()
 
-# TODO: make it so that disasters last multiple years
-
 population = PopulationEstimation()
 for year in range(STARTING_YEAR, ENDING_YEAR):
-    #print(year)
     population.next_year()
 population.plot()
